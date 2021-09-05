@@ -2,13 +2,13 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-$id_todolist = $_GET["id_todolist"];
+$id_todolist = $_POST["id_todolist"];
 
-$sql = "DELETE from todolists WHERE id = $id_todolist";
+$sql = "UPDATE todolists SET isdeleted = '1' WHERE id = ?";
 
 //prepare and bind
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("isss", $id_todolist);
+$stmt->bind_param("i", $id_todolist);
 $stmt->execute();
 
 if ($stmt->affected_rows > 0) {

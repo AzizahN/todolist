@@ -6,9 +6,9 @@ $id_tags = $_POST["id_tags"];
 $judul = $_POST["judul"];
 $deadline = $_POST["deadline"];
 date_default_timezone_set("Asia/Jakarta");
-$created_at = date('d-m-Y H:i:s');
+$created_at = date('Y-m-d H:i:s');
 
-$sql = "INSERT INTO todolists (tags_id, judul, deadline, created_at) VALUES (?, ?, ?, ?)";
+$sql = "INSERT INTO todolists (tags_id, judul, deadline, isdeleted, created_at) VALUES (?, ?, ?,'0', ?)";
 
 // prepare and bind
 $stmt = $conn->prepare($sql);
