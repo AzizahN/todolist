@@ -2,10 +2,10 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-$id = $_POST["idadmin"];
-$email = $_POST["email"];
-$nama = $_POST["nama"];
-$password = $_POST["password"];
+$id = isset($_POST["idadmin"]) ? $_POST["idadmin"] : die();
+$email = isset($_POST["email"]) ? $_POST["email"] : die();
+$nama = isset($_POST["nama"]) ? $_POST["nama"] : die();
+$password = isset($_POST["password"]) ? $_POST["password"] : die();
 date_default_timezone_set("Asia/Jakarta");
 $updated_at = date('Y-m-d H:i:s');
 

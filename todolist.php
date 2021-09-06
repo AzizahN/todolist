@@ -4,10 +4,10 @@ header("Access-Control-Allow-Origin: *");
 include "conn.php";
 $is_deleted = isset($_POST['is_deleted']) ? $_POST['is_deleted'] : die();
 $user_id = isset($_POST['user_id']) ? $_POST['user_id'] : die();
-$sql = "SELECT td.id as id, judul, deadline, created_at, checklist, photo, t.tags as tags FROM todolists td INNER JOIN tags t on t.id=td.tags_id where user_id=? and is_deleted=?";
+$sql = "SELECT td.id as id, todolist, deadline, created_at, checklist, photo, t.tags as tags FROM todolists td INNER JOIN tags t on t.id=td.tags_id where users_id=? and is_deleted=?";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param('ii', $is_deleted, $user_id);
+$stmt->bind_param('ii', $user_id, $is_deleted);
 $stmt->execute();
 $result = $stmt->get_result();
 date_default_timezone_set("Asia/Jakarta");
@@ -18,7 +18,7 @@ if ($result->num_rows > 0) {
     $i = 0;
     while ($row = $result->fetch_assoc()) {
         $data[$i]['id'] = stripslashes($row['id']);
-        $data[$i]['judul'] = stripslashes($row['judul']);
+        $data[$i]['todolist'] = stripslashes($row['todolist']);
         $data[$i]['deadline'] = stripslashes($row['deadline']);
         $data[$i]['checklist'] = stripslashes($row['checklist']);
         $data[$i]['created_at'] = stripslashes($row['created_at']);
@@ -38,7 +38,9 @@ if ($result->num_rows > 0) {
     }
     echo json_encode($data);
 } else {
-    echo "Unable to process your request, please try again";
+    $data = array();
+    $data[0]['todolist'] = stripslashes("You don't have any to do list yet!");
+    echo json_encode($data);
     die();
 }
 $stmt->close();

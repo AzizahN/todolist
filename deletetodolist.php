@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-$id_todolist = $_POST["id_todolist"];
+$id_todolist = isset($_POST["id_todolist"]) ? $_POST["id_todolist"] : die();
 
 $sql = "UPDATE todolists SET isdeleted = '1' WHERE id = ?";
 

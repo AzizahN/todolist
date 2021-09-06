@@ -2,10 +2,10 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-$id_tags = $_POST["id_tags"];
-$id_users = $_POST["id_users"];
-$todolist = $_POST["todolist"];
-$deadline = $_POST["deadline"];
+$id_tags = isset($_POST["id_tags"]) ? $_POST["id_tags"] : die();
+$id_users = isset($_POST["id_users"]) ? $_POST["id_users"] : die();
+$todolist = isset($_POST["todolist"]) ? $_POST["todolist"] : die();
+$deadline = isset($_POST["deadline"]) ? $_POST["deadline"] : die();
 date_default_timezone_set("Asia/Jakarta");
 $created_at = date('Y-m-d H:i:s');
 
@@ -17,7 +17,7 @@ if (isset($_FILES["photo"]["tmp_name"])){
     $sql = "INSERT INTO todolists (tags_id, todolist, deadline, created_at, checklist, photo, users_id) VALUES (?,?,?,?,'0',?,?)";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("issssi", $id_tags, $todolist, $deadline, $created_at, $ext, $id_users); //nyesuain sql
+    $stmt->bind_param("issssi", $id_tags, $todolist, $deadline, $created_at, $ext, $users_id); //nyesuain sql
     $stmt->execute();
     
     if ($stmt->affected_rows > 0) {
@@ -31,7 +31,7 @@ if (isset($_FILES["photo"]["tmp_name"])){
     $sql = "INSERT INTO todolists (tags_id, todolist, deadline, created_at, checklist, users_id) VALUES (?,?,?,?,'0',?)";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("issss", $id_tags, $todolist, $deadline, $created_at, $id_users);
+    $stmt->bind_param("isssi", $id_tags, $todolist, $deadline, $created_at, $users_id);
     $stmt->execute();
     
     if ($stmt->affected_rows > 0) {

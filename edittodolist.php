@@ -2,11 +2,11 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-$idtodolist = $_POST["idtodolist"];
-$todolist = $_POST["todolist"];
-$id_tags = $_POST["id_tags"];
-$deadline = $_POST["deadline"];
-$checklist = $_POST["checklist"];
+$idtodolist = isset($_POST["idtodolist"]) ? $_POST["idtodolist"] : die();
+$todolist = isset($_POST["todolist"]) ? $_POST["todolist"] : die();
+$id_tags = isset($_POST["id_tags"]) ? $_POST["id_tags"] : die();
+$deadline = isset($_POST["deadline"]) ? $_POST["deadline"] : die();
+$checklist = isset($_POST["checklist"]) ? $_POST["checklist"] : die();
 date_default_timezone_set("Asia/Jakarta");
 $updated_at = date('Y-m-d H:i:s');
 

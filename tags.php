@@ -2,7 +2,6 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-$id_tags = $_POST["id_tags"];
 
 $sql = "SELECT * FROM tags";
 

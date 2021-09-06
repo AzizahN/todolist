@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-$id = $_POST["idadmin"];
+$id = isset($_POST["idadmin"]) ? $_POST["idadmin"] : die();
 $sql = "DELETE FROM users WHERE id = ?";
 
 // prepare and bind
