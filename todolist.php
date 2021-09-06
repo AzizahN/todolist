@@ -2,9 +2,12 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-$sql = "SELECT * FROM todolists";
+$is_deleted = isset($_POST['is_deleted']) ? $_POST['is_deleted'] : die();
+$user_id = isset($_POST['user_id']) ? $_POST['user_id'] : die();
+$sql = "SELECT td.id as id, judul, deadline, created_at, checklist, photo, t.tags as tags FROM todolists td INNER JOIN tags t on t.id=td.tags_id where user_id=? and is_deleted=?";
 
 $stmt = $conn->prepare($sql);
+$stmt->bind_param('ii', $is_deleted, $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 date_default_timezone_set("Asia/Jakarta");
@@ -17,27 +20,13 @@ if ($result->num_rows > 0) {
         $data[$i]['id'] = stripslashes($row['id']);
         $data[$i]['judul'] = stripslashes($row['judul']);
         $data[$i]['deadline'] = stripslashes($row['deadline']);
-
-        $sql2 = "SELECT checklist FROM task where idtodolist=?";
-        $stmt = $conn->prepare($sql2);
-        $stmt->bind_param('s', $row['id']);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        $checklist;
-        if ($res->num_rows > 0) {
+        $data[$i]['checklist'] = stripslashes($row['checklist']);
+        $data[$i]['created_at'] = stripslashes($row['created_at']);
+        $data[$i]['photo'] = stripslashes($row['photo']);
+        $data[$i]['tags'] = stripslashes($row['tags']);
+        if ($row['checklist'] == '1') {
             $checklist = "Completed";
-            while ($row2 = $res->fetch_assoc()){
-                if ($row2['checklist']=='0') $checklist="notcompleted";
-                break;
-            }
-            if ($checklist == "notcompleted"){
-                if (new DateTime($row['deadline']) > new DateTime($now)){
-                    $checklist = "Doing";
-                } else {
-                    $checklist = "Overdue";
-                }
-            }
-        } else {
+        } else if ($row['checklist'] == '0') {
             if (new DateTime($row['deadline']) > new DateTime($now)){
                 $checklist = "Doing";
             } else {
@@ -45,8 +34,6 @@ if ($result->num_rows > 0) {
             }
         }
         $data[$i]['status'] = stripslashes($checklist);
-        $data[$i]['created_at'] = stripslashes($row['created_at']);
-        $data[$i]['tags_id'] = stripslashes($row['tags_id']);
         $i++;
     }
     echo json_encode($data);

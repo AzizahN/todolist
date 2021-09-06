@@ -2,26 +2,46 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-$id_todolist = $_POST["idtodolist"];
+$idtodolist = $_POST["idtodolist"];
+$todolist = $_POST["todolist"];
 $id_tags = $_POST["id_tags"];
-$judul = $_POST["judul"];
 $deadline = $_POST["deadline"];
+$checklist = $_POST["checklist"];
 date_default_timezone_set("Asia/Jakarta");
 $updated_at = date('Y-m-d H:i:s');
 
-$sql = "UPDATE todolists SET tags_id = ?, judul = ?, deadline = ?, updated_at = ? WHERE id = ?";
+if (isset($_FILES["photo"]["tmp_name"])){
+    $photo = $_FILES["photo"]["tmp_name"];
+    $ext = pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION);
+    $ext = explode('?', $ext)[0];
 
-// prepare and bind
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("isssi", $id_tags, $judul, $deadline, $updated_at, $id_todolist); //mengikuti tanda tanya
-$stmt->execute();
+    $sql = "UPDATE todolists SET tags_id = ?, todolist = ?, deadline = ?, checklist=?, photo=?, updated_at = ? WHERE id = ?";
 
-if ($stmt->affected_rows >= 0) {
-    $arr_hasil = array("status"=>true, "pesan"=>"To do list updated.");
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("isssss", $id_tags, $todolist, $deadline, $checklist, $ext, $updated_at, $idtodolist); //mengikuti tanda tanya
+    $stmt->execute();
+
+    if ($stmt->affected_rows >= 0) {
+        $arr_hasil = array("status"=>true, "pesan"=>"To do list updated.");
+        move_uploaded_file($photo, "images/".$idtodolist.".".$ext);
+    } else {
+        $arr_hasil = array("status"=>false, "pesan"=>$conn->error);
+    }
+    echo json_encode($arr_hasil);
 } else {
-    $arr_hasil = array("status"=>false, "pesan"=>$conn->error);
+    $sql = "UPDATE todolists SET tags_id = ?, todolist = ?, deadline = ?, checklist=?, updated_at = ? WHERE id = ?";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("issss", $id_tags, $todolist, $deadline, $checklist, $updated_at, $idtodolist); //mengikuti tanda tanya
+    $stmt->execute();
+
+    if ($stmt->affected_rows >= 0) {
+        $arr_hasil = array("status"=>true, "pesan"=>"To do list updated.");
+    } else {
+        $arr_hasil = array("status"=>false, "pesan"=>$conn->error);
+    }
+    echo json_encode($arr_hasil);
 }
-echo json_encode($arr_hasil);
 $conn->close();
 
 ?>

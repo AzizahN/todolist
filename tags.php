@@ -2,12 +2,11 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
+$id_tags = $_POST["id_tags"];
 
-$role = isset($_POST['role']) ? $_POST['role'] : die();
-$sql = "SELECT id, email, nama, created_at FROM users where role=?";
+$sql = "SELECT * FROM tags";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param('s', $role);
 $stmt->execute();
 $result = $stmt->get_result();
 if ($result->num_rows > 0) {
@@ -15,16 +14,16 @@ if ($result->num_rows > 0) {
     $i = 0;
     while ($row = $result->fetch_assoc()) {
         $data[$i]['id'] = stripslashes($row['id']);
-        $data[$i]['email'] = stripslashes($row['email']);
-        $data[$i]['nama'] = stripslashes($row['nama']);
-        $data[$i]['created_at'] = stripslashes($row['created_at']);
+        $data[$i]['tags'] = stripslashes($row['tags']);
         $i++;
     }
     echo json_encode($data);
-} else {
+}else {
     echo "Unable to process your request, please try again";
     die();
 }
 $stmt->close();
 $conn->close();
+
 ?>
+
