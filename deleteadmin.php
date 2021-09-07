@@ -11,9 +11,9 @@ $stmt->bind_param("i", $id);
 $stmt->execute();
 
 if ($stmt->affected_rows >= 0) {
-    $arr_hasil = array("status"=>true, "pesan"=>"Admin deleted.");
+    $arr_hasil = array("status"=>true, "message"=>"Admin deleted.");
 } else {
-    $arr_hasil = array("status"=>false, "pesan"=>$conn->error);
+    $arr_hasil = array("status"=>false, "message"=>"Failed to delete Admin");
 }
 echo json_encode($arr_hasil);
 $conn->close();

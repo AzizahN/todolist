@@ -12,9 +12,9 @@ $stmt->bind_param("i", $id_todolist);
 $stmt->execute();
 
 if ($stmt->affected_rows > 0) {
-    $arr_hasil = array("status"=>true, "pesan"=>"To do list deleted");
+    $arr_hasil = array("status"=>true, "message"=>"To do list deleted");
 } else {
-    $arr_hasil = array("status"=>false, "pesan"=>$conn->error);
+    $arr_hasil = array("status"=>false, "message"=>"Failed to delete to do list");
 }
 echo json_encode($arr_hasil);
 $conn->close();

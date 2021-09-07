@@ -24,12 +24,21 @@
         $stmt->execute();
 
         if ($stmt->affected_rows >= 0) {
-            echo "Success!";
+            echo json_encode([
+                "status" => true,
+                "message" => "Password changed!",
+            ]);
         } else {
-            echo "Failed!";
-            }
+            echo json_encode([
+                "status" => false,
+                "message" => "Failed!",
+            ]);
+        }
 	} else{
-		echo "Failed. Email not found.";
+		echo json_encode([
+            "status" => false,
+            "message" => "Failed! Email not found!",
+        ]);
 	}
 
 	$conn->close();

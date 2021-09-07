@@ -2,14 +2,17 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
+include "bcrypt.php";
 $id = isset($_POST["idadmin"]) ? $_POST["idadmin"] : die();
 $email = isset($_POST["email"]) ? $_POST["email"] : die();
 $nama = isset($_POST["nama"]) ? $_POST["nama"] : die();
 $password = isset($_POST["password"]) ? $_POST["password"] : die();
+$bcrypt = new Bcrypt(16);
+$password = $bcrypt->hash($password);
 date_default_timezone_set("Asia/Jakarta");
 $updated_at = date('Y-m-d H:i:s');
 
-$sql = "UPDATE users email = ?, nama = ?, password = ?, updated_at = ? WHERE id = ? and role='admin'";
+$sql = "UPDATE users SET email = ?, nama = ?, password = ?, updated_at = ? WHERE id = ? and role='admin'";
 
 // prepare and bind
 $stmt = $conn->prepare($sql);

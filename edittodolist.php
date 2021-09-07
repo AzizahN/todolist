@@ -22,10 +22,10 @@ if (isset($_FILES["photo"]["tmp_name"])){
     $stmt->execute();
 
     if ($stmt->affected_rows >= 0) {
-        $arr_hasil = array("status"=>true, "pesan"=>"To do list updated.");
+        $arr_hasil = array("status"=>true, "message"=>"To do list updated.");
         move_uploaded_file($photo, "images/".$idtodolist.".".$ext);
     } else {
-        $arr_hasil = array("status"=>false, "pesan"=>$conn->error);
+        $arr_hasil = array("status"=>false, "message"=>"Failed to update to do list");
     }
     echo json_encode($arr_hasil);
 } else {
@@ -36,9 +36,9 @@ if (isset($_FILES["photo"]["tmp_name"])){
     $stmt->execute();
 
     if ($stmt->affected_rows >= 0) {
-        $arr_hasil = array("status"=>true, "pesan"=>"To do list updated.");
+        $arr_hasil = array("status"=>true, "message"=>"To do list updated.");
     } else {
-        $arr_hasil = array("status"=>false, "pesan"=>$conn->error);
+        $arr_hasil = array("status"=>false, "message"=>"Failed to update to do list");
     }
     echo json_encode($arr_hasil);
 }
