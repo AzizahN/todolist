@@ -14,7 +14,7 @@ if (isset($_FILES["photo"]["tmp_name"])){
     $ext = pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION);
     $ext = explode('?', $ext)[0];
     
-    $sql = "INSERT INTO todolists (tags_id, todolist, deadline, created_at, checklist, photo, users_id) VALUES (?,?,?,?,'0',?,?)";
+    $sql = "INSERT INTO todolists (tags_id, todolist, deadline, created_at, checklist, is_deleted, photo, users_id) VALUES (?,?,?,?,'0','0',?,?)";
     
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("issssi", $id_tags, $todolist, $deadline, $created_at, $ext, $users_id); //nyesuain sql
@@ -28,7 +28,7 @@ if (isset($_FILES["photo"]["tmp_name"])){
         $arr_hasil = array("status"=>false, "pesan"=>$conn->error);
     }
 } else {
-    $sql = "INSERT INTO todolists (tags_id, todolist, deadline, created_at, checklist, users_id) VALUES (?,?,?,?,'0',?)";
+    $sql = "INSERT INTO todolists (tags_id, todolist, deadline, created_at, checklist, is_deleted, users_id) VALUES (?,?,?,?,'0','0',?)";
     
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("isssi", $id_tags, $todolist, $deadline, $created_at, $users_id);
