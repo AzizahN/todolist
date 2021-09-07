@@ -42,7 +42,7 @@ if (isset($_FILES["photo"]["tmp_name"])){
     
     if ($stmt->affected_rows > 0) {
         $idtodolist = $conn->insert_id;
-        $arr_hasil = array("status"=>true, "pesan"=>"To do list created.");
+        $arr_hasil = array("status"=>true, "message"=>"To do list created.");
         move_uploaded_file($photo, "images/".$idtodolist.".".$ext);
     } else {
         $arr_hasil = array("status"=>false, "pesan"=>"Failed to create to do list.");
@@ -56,7 +56,7 @@ if (isset($_FILES["photo"]["tmp_name"])){
     $stmt->execute();
     
     if ($stmt->affected_rows > 0) {
-        $arr_hasil = array("status"=>true, "pesan"=>"To do list created.");
+        $arr_hasil = array("status"=>true, "message"=>"To do list created.");
     } else {
         $arr_hasil = array("status"=>false, "pesan"=>"Failed to create to do list.");
         header("HTTP/1.1 210 Failed");

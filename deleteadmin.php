@@ -17,7 +17,7 @@ $stmt->bind_param("i", $id);
 $stmt->execute();
 
 if ($stmt->affected_rows >= 0) {
-    $arr_hasil = array("status"=>true, "pesan"=>"Admin deleted.");
+    $arr_hasil = array("status"=>true, "message"=>"Admin deleted.");
 } else {
     $arr_hasil = array("status"=>false, "pesan"=>"Failed to delete admin.");
     header("HTTP/1.1 210 Failed");
