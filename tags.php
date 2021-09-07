@@ -2,7 +2,6 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-
 $sql = "SELECT * FROM tags";
 
 $stmt = $conn->prepare($sql);
@@ -18,6 +17,7 @@ if ($result->num_rows > 0) {
     }
     echo json_encode($data);
 }else {
+    header("HTTP/1.1 210 Failed");
     echo "Unable to process your request, please try again";
     die();
 }

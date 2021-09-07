@@ -2,29 +2,37 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-include "bcrypt.php";
-$id = isset($_POST["idadmin"]) ? $_POST["idadmin"] : die();
-$email = isset($_POST["email"]) ? $_POST["email"] : die();
-$nama = isset($_POST["nama"]) ? $_POST["nama"] : die();
-$password = isset($_POST["password"]) ? $_POST["password"] : die();
-$bcrypt = new Bcrypt(16);
-$password = $bcrypt->hash($password);
-date_default_timezone_set("Asia/Jakarta");
-$updated_at = date('Y-m-d H:i:s');
 
-$sql = "UPDATE users SET email = ?, nama = ?, password = ?, updated_at = ? WHERE id = ? and role='admin'";
+$role = isset($_POST['role']) ? $_POST['role'] : "";
 
-// prepare and bind
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("ssssi", $email, $nama, $password, $updated_at, $id);
-$stmt->execute();
-
-if ($stmt->affected_rows >= 0) {
-    $arr_hasil = array("status"=>true, "pesan"=>"Admin updated.");
+if ($role=='admin' || $role=='user'){
+    $sql = "SELECT id, email, nama, role, created_at FROM users where role=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('s', $role);
+    $stmt->execute();
 } else {
-    $arr_hasil = array("status"=>false, "pesan"=>$conn->error);
+    $sql = "SELECT id, email, nama, role, created_at FROM users";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
 }
-echo json_encode($arr_hasil);
-$conn->close();
 
+$result = $stmt->get_result();
+if ($result->num_rows > 0) {
+    $data = array();
+    $i = 0;
+    while ($row = $result->fetch_assoc()) {
+        $data[$i]['id'] = stripslashes($row['id']);
+        $data[$i]['email'] = stripslashes($row['email']);
+        $data[$i]['nama'] = stripslashes($row['nama']);
+        $data[$i]['role'] = stripslashes($row['role']);
+        $data[$i]['created_at'] = stripslashes($row['created_at']);
+        $i++;
+    }
+    echo json_encode($data);
+} else {
+    header("HTTP/1.1 210 Failed");
+    echo "Unable to process your request, please try again";
+}
+$stmt->close();
+$conn->close();
 ?>

@@ -2,15 +2,36 @@
     header("Access-Control-Allow-Origin: *");
 	include "bcrypt.php";
     include "conn.php";
-
-    $email = isset($_POST['email']) ? $_POST['email'] : die();
-    $password = isset($_POST['password']) ? $_POST['password'] : die();
-    $role = isset($_POST['role']) ? $_POST['role'] : die();
-    $nama = isset($_POST['nama']) ? $_POST['nama'] : die();
+    
+    if (isset($_POST['email'])) {
+	    $email = $_POST['email'];
+	} else {
+	    header("HTTP/1.1 209 No email Param");
+	    die();
+	}
+	if (isset($_POST['password'])) {
+	    $password = $_POST['password'];
+	} else {
+	    header("HTTP/1.1 209 No password Param");
+	    die();
+	}
+	if (isset($_POST['role'])){
+	    $role = $_POST['role'];
+	} else {
+	    header("HTTP/1.1 209 No role Param"); 
+	    die();
+	}
+	if (isset($_POST['nama'])){
+	    $nama = $_POST['nama'];
+	} else {
+	    header("HTTP/1.1 209 No nama Param"); 
+	    die();
+	}
     date_default_timezone_set("Asia/Jakarta");
     $created_at = date('Y-m-d H:i:s');
 
     if ($role == "superadmin"){
+        header("HTTP/1.1 210 Failed");
         $user = array();
         $user['status'] = false;
         $user['message'] = "You can't create super admin!";
@@ -23,6 +44,7 @@
         $res = $stmt->get_result();
 
         if ($res->num_rows > 0){
+            header("HTTP/1.1 210 Failed");
             $user = array();
             $user['status'] = false;
             $user['message'] = "Email already registered!";
@@ -45,6 +67,7 @@
                 $user['message'] = "Register Success!";
                 echo json_encode($user, JSON_UNESCAPED_SLASHES);
             } else {
+                header("HTTP/1.1 210 Failed");
                 $user = array();
                 $user['status'] = false;
                 $user['message'] = "Register Failed!";

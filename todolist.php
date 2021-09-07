@@ -2,8 +2,19 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-$is_deleted = isset($_POST['is_deleted']) ? $_POST['is_deleted'] : die();
-$user_id = isset($_POST['user_id']) ? $_POST['user_id'] : die();
+if (isset($_POST['is_deleted'])){
+    $is_deleted = $_POST['is_deleted'];    
+} else{
+   header("HTTP/1.1 209 No is_deleted Param");
+   die();
+}
+if (isset($_POST['user_id'])){
+    $user_id = $_POST['user_id'];
+} else {
+   header("HTTP/1.1 209 No user_id Param");
+   die();
+}
+
 $sql = "SELECT td.id as id, todolist, deadline, created_at, checklist, photo, t.tags as tags FROM todolists td INNER JOIN tags t on t.id=td.tags_id where users_id=? and is_deleted=?";
 
 $stmt = $conn->prepare($sql);
@@ -38,6 +49,7 @@ if ($result->num_rows > 0) {
     }
     echo json_encode($data);
 } else {
+    header("HTTP/1.1 210 Failed");
     $data = array();
     $data[0]['todolist'] = stripslashes("You don't have any to do list yet!");
     echo json_encode($data);

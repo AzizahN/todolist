@@ -3,8 +3,18 @@
 	include "bcrypt.php";
 	include "conn.php";
 
-	$email = isset($_POST['email']) ? $_POST['email'] : die();
-	$password = isset($_POST['password']) ? $_POST['password'] : die();
+    if (isset($_POST['email'])){
+        $email = $_POST['email'];
+    }else{
+        header("HTTP/1.1 209 No email Param");
+        die();
+    }
+	if (isset($_POST['password'])){
+        $password = $_POST['password'];
+	} else{
+	    header("HTTP/1.1 209 No password Param");
+	    die();
+	}
     date_default_timezone_set("Asia/Jakarta");
     $updated_at = date('Y-m-d H:i:s');
 
@@ -29,12 +39,14 @@
                 "message" => "Password changed!",
             ]);
         } else {
+            header("HTTP/1.1 210 Failed");
             echo json_encode([
                 "status" => false,
                 "message" => "Failed!",
             ]);
         }
 	} else{
+        header("HTTP/1.1 210 Failed");
 		echo json_encode([
             "status" => false,
             "message" => "Failed! Email not found!",

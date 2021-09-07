@@ -2,9 +2,24 @@
     header("Access-Control-Allow-Origin: *");
     include "conn.php";
 
-    $email = isset($_POST['email']) ? $_POST['email'] : die();
-    $role = isset($_POST['role']) ? $_POST['role'] : die();
-    $strfor = isset($_POST['strfor']) ? $_POST['strfor'] : die();
+    if (isset($_POST['email'])){
+        $email = $_POST['email'];    
+    } else {
+        header("HTTP/1.1 209 No email Param"); 
+        die();
+    }
+    if (isset($_POST['role'])){
+        $role = $_POST['role'];
+    } else {
+       header("HTTP/1.1 209 No role Param");
+       die();
+    }
+    if (isset($_POST['strfor'])){
+        $strfor = $_POST['strfor'];    
+    } else {
+        header("HTTP/1.1 209 No strfor Param");
+        die();
+    }
 
     if ($strfor=='regis' || $strfor=='forgot'){
         if ($role=="admin" || $role=="user"){
@@ -15,6 +30,7 @@
             $res = $stmt->get_result();
             if ($strfor=="regis"){
                 if($res->num_rows > 0) {
+                    header("HTTP/1.1 210 Failed");
                     echo json_encode([
                         "status" => false,
                         "message" => "Email already registered!",
@@ -32,6 +48,7 @@
                         "message" => "Email found!",
                     ]);
                 } else {
+                    header("HTTP/1.1 210 Failed");
                     echo json_encode([
                         "status" => false,
                         "message" => "Email is not registered!",

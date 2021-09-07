@@ -3,11 +3,26 @@
 	include "bcrypt.php";
 	include "conn.php";
 
-	$email = isset($_POST['email']) ? $_POST['email'] : die();
-    $password = isset($_POST['password']) ? $_POST['password'] : die();
-    $role = isset($_POST['role']) ? $_POST['role'] : die();
+	if (isset($_POST['email'])) {
+	    $email = $_POST['email'];
+	} else {
+	    header("HTTP/1.1 209 No email Param");
+	    die();
+	}
+	if (isset($_POST['password'])) {
+	    $password = $_POST['password'];
+	} else {
+	    header("HTTP/1.1 209 No password Param");
+	    die();
+	}
+	if (isset($_POST['role'])){
+	    $role = $_POST['role'];
+	} else {
+	    header("HTTP/1.1 209 No role Param"); 
+	    die();
+	}
+	
 	$res;
-
 	if ($role=='admin'){
 		$sql = "SELECT * FROM users WHERE email=? and (role='admin' or role='superadmin')";
 		$stmt = $conn->prepare($sql);
@@ -40,6 +55,7 @@
             $user['message'] = "Login Success!";
             echo json_encode($user, JSON_UNESCAPED_SLASHES);
 		} else {
+			header("HTTP/1.1 210 Failed");
 			echo json_encode([
 				"status" => false,
 				"message" => "Your password is wrong!",
@@ -47,6 +63,7 @@
 		}
 		$stmt->close();
 	} else{
+		header("HTTP/1.1 210 Failed");
 		echo json_encode([
 			"status" => false,
 			"message" => "Email not registered as ".$role."!",
