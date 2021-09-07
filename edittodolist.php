@@ -18,7 +18,7 @@ if (isset($_FILES["photo"]["tmp_name"])){
     $sql = "UPDATE todolists SET tags_id = ?, todolist = ?, deadline = ?, checklist=?, photo=?, updated_at = ? WHERE id = ?";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isssss", $id_tags, $todolist, $deadline, $checklist, $ext, $updated_at, $idtodolist); //mengikuti tanda tanya
+    $stmt->bind_param("isssssi", $id_tags, $todolist, $deadline, $checklist, $ext, $updated_at, $idtodolist); //mengikuti tanda tanya
     $stmt->execute();
 
     if ($stmt->affected_rows >= 0) {
@@ -32,7 +32,7 @@ if (isset($_FILES["photo"]["tmp_name"])){
     $sql = "UPDATE todolists SET tags_id = ?, todolist = ?, deadline = ?, checklist=?, updated_at = ? WHERE id = ?";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("issss", $id_tags, $todolist, $deadline, $checklist, $updated_at, $idtodolist); //mengikuti tanda tanya
+    $stmt->bind_param("issssi", $id_tags, $todolist, $deadline, $checklist, $updated_at, $idtodolist); //mengikuti tanda tanya
     $stmt->execute();
 
     if ($stmt->affected_rows >= 0) {
