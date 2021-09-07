@@ -19,7 +19,7 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("ssssi", $email, $nama, $password, $updated_at, $id);
 $stmt->execute();
 
-if ($stmt->affected_rows >= 0) {
+if ($stmt->affected_rows > 0) {
     $arr_hasil = array("status"=>true, "message"=>"Admin updated.");
 } else {
     $arr_hasil = array("status"=>false, "message"=>"Failed to update Admin.");
