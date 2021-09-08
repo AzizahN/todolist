@@ -2,10 +2,10 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-if(isset($_POST["idadmin"])){
-    $id = $_POST["idadmin"];
+if(isset($_POST["id_admin"])){
+    $id_admin = $_POST["id_admin"];
 } else{
-    header("HTTP/1.1 209 No idadmin Param"); 
+    header("HTTP/1.1 209 No id_admin Param");
     die();
 }
 
@@ -13,7 +13,7 @@ $sql = "DELETE FROM users WHERE id = ?";
 
 // prepare and bind
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
+$stmt->bind_param("i", $id_admin);
 $stmt->execute();
 
 if ($stmt->affected_rows >= 0) {

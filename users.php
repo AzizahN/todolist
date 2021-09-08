@@ -3,12 +3,23 @@ header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
 
-$role = isset($_POST['role']) ? $_POST['role'] : die();
-$sql = "SELECT id, email, nama, created_at FROM users where role=?";
+if (isset($_POST["role"])){
+    $role = $_POST["role"];
+    if ($role=='admin' || $role=='user'){
+        $sql = "SELECT id, email, nama, role, created_at FROM users where role=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('s', $role);
+        $stmt->execute();
+    } else {
+        $sql = "SELECT id, email, nama, role, created_at FROM users";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+    }
+}else{
+    header("HTTP/1.1 209 No role Param");
+    die();
+}
 
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('s', $role);
-$stmt->execute();
 $result = $stmt->get_result();
 if ($result->num_rows > 0) {
     $data = array();
@@ -22,7 +33,8 @@ if ($result->num_rows > 0) {
     }
     echo json_encode($data);
 } else {
-    echo "Unable to process your request, please try again";
+    header("HTTP/1.1 210 Failed");
+    echo "Cannot find the user";
     die();
 }
 $stmt->close();
