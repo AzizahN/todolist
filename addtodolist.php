@@ -8,10 +8,10 @@ if (isset($_POST["id_tags"])){
     header("HTTP/1.1 209 No id_tags Param"); 
     die();
 }
-if (isset($_POST["id_users"])){
-    $id_users = $_POST["id_users"];
+if (isset($_POST["id_user"])){
+    $id_user = $_POST["id_user"];
 }else{
-    header("HTTP/1.1 209 No id_users Param"); 
+    header("HTTP/1.1 209 No id_user Param");
     die();
 }
 if (isset($_POST["todolist"])){
@@ -37,7 +37,7 @@ if (isset($_FILES["photo"]["tmp_name"])){
     $sql = "INSERT INTO todolists (tags_id, todolist, deadline, created_at, checklist, is_deleted, photo, users_id) VALUES (?,?,?,?,'0','0',?,?)";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("issssi", $id_tags, $todolist, $deadline, $created_at, $ext, $id_users); //nyesuain sql
+    $stmt->bind_param("issssi", $id_tags, $todolist, $deadline, $created_at, $ext, $id_user); //nyesuain sql
     $stmt->execute();
     
     if ($stmt->affected_rows > 0) {
@@ -52,7 +52,7 @@ if (isset($_FILES["photo"]["tmp_name"])){
     $sql = "INSERT INTO todolists (tags_id, todolist, deadline, created_at, checklist, is_deleted, users_id) VALUES (?,?,?,?,'0','0',?)";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("issss", $id_tags, $todolist, $deadline, $created_at, $id_users);
+    $stmt->bind_param("issss", $id_tags, $todolist, $deadline, $created_at, $id_user);
     $stmt->execute();
     
     if ($stmt->affected_rows > 0) {

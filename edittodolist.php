@@ -2,10 +2,10 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-if (isset($_POST["idtodolist"])){
-    $idtodolist = $_POST["idtodolist"];    
+if (isset($_POST["id_todolist"])){
+    $id_todolist = $_POST["id_todolist"];
 } else {
-    header("HTTP/1.1 209 No idtodolist Param");
+    header("HTTP/1.1 209 No id_todolist Param");
     die();
 }
 if (isset($_POST["todolist"])){
@@ -43,12 +43,12 @@ if (isset($_FILES["photo"]["tmp_name"])){
     $sql = "UPDATE todolists SET tags_id = ?, todolist = ?, deadline = ?, checklist=?, photo=?, updated_at = ? WHERE id = ?";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isssssi", $id_tags, $todolist, $deadline, $checklist, $ext, $updated_at, $idtodolist); //mengikuti tanda tanya
+    $stmt->bind_param("isssssi", $id_tags, $todolist, $deadline, $checklist, $ext, $updated_at, $id_todolist); //mengikuti tanda tanya
     $stmt->execute();
 
     if ($stmt->affected_rows > 0) {
         $arr_hasil = array("status"=>true, "pesan"=>"To do list updated.");
-        move_uploaded_file($photo, "images/".$idtodolist.".".$ext);
+        move_uploaded_file($photo, "images/".$id_todolist.".".$ext);
     } else {
         $arr_hasil = array("status"=>false, "pesan"=>"Failed to update to do list.");
         header("HTTP/1.1 210 Failed");
@@ -58,7 +58,7 @@ if (isset($_FILES["photo"]["tmp_name"])){
     $sql = "UPDATE todolists SET tags_id = ?, todolist = ?, deadline = ?, checklist=?, updated_at = ? WHERE id = ?";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("issssi", $id_tags, $todolist, $deadline, $checklist, $updated_at, $idtodolist); //mengikuti tanda tanya
+    $stmt->bind_param("issssi", $id_tags, $todolist, $deadline, $checklist, $updated_at, $id_todolist); //mengikuti tanda tanya
     $stmt->execute();
 
     if ($stmt->affected_rows > 0) {
