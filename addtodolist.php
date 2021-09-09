@@ -8,10 +8,10 @@ if (isset($_POST["id_tags"])){
     header("HTTP/1.1 209 No id_tags Param"); 
     die();
 }
-if (isset($_POST["id_user"])){
-    $id_user = $_POST["id_user"];
+if (isset($_POST["id_users"])){
+    $id_users = $_POST["id_users"];
 }else{
-    header("HTTP/1.1 209 No id_user Param");
+    header("HTTP/1.1 209 No id_users Param"); 
     die();
 }
 if (isset($_POST["todolist"])){
@@ -37,12 +37,12 @@ if (isset($_FILES["photo"]["tmp_name"])){
     $sql = "INSERT INTO todolists (tags_id, todolist, deadline, created_at, checklist, is_deleted, photo, users_id) VALUES (?,?,?,?,'0','0',?,?)";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("issssi", $id_tags, $todolist, $deadline, $created_at, $ext, $id_user); //nyesuain sql
+    $stmt->bind_param("issssi", $id_tags, $todolist, $deadline, $created_at, $ext, $id_users); //nyesuain sql
     $stmt->execute();
     
     if ($stmt->affected_rows > 0) {
         $idtodolist = $conn->insert_id;
-        $arr_hasil = array("status"=>true, "message"=>"To do list created.");
+        $arr_hasil = array("status"=>true, "pesan"=>"To do list created.");
         move_uploaded_file($photo, "images/".$idtodolist.".".$ext);
     } else {
         $arr_hasil = array("status"=>false, "pesan"=>"Failed to create to do list.");
@@ -52,11 +52,11 @@ if (isset($_FILES["photo"]["tmp_name"])){
     $sql = "INSERT INTO todolists (tags_id, todolist, deadline, created_at, checklist, is_deleted, users_id) VALUES (?,?,?,?,'0','0',?)";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("issss", $id_tags, $todolist, $deadline, $created_at, $id_user);
+    $stmt->bind_param("issss", $id_tags, $todolist, $deadline, $created_at, $id_users);
     $stmt->execute();
     
     if ($stmt->affected_rows > 0) {
-        $arr_hasil = array("status"=>true, "message"=>"To do list created.");
+        $arr_hasil = array("status"=>true, "pesan"=>"To do list created.");
     } else {
         $arr_hasil = array("status"=>false, "pesan"=>"Failed to create to do list.");
         header("HTTP/1.1 210 Failed");

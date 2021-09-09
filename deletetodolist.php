@@ -17,7 +17,7 @@ $stmt->bind_param("i", $id_todolist);
 $stmt->execute();
 
 if ($stmt->affected_rows > 0) {
-    $arr_hasil = array("status"=>true, "message"=>"To do list deleted");
+    $arr_hasil = array("status"=>true, "pesan"=>"To do list deleted");
 } else {
     $arr_hasil = array("status"=>false, "pesan"=>"Failed to delete to do list.");
     header("HTTP/1.1 210 Failed");

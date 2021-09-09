@@ -2,23 +2,17 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-if (isset($_POST['is_deleted'])){
-    $is_deleted = $_POST['is_deleted'];    
-} else{
-   header("HTTP/1.1 209 No is_deleted Param");
-   die();
-}
-if (isset($_POST['id_user'])){
-    $id_user = $_POST['id_user'];
+if (isset($_GET['email'])){
+    $email = $_GET['email'];
 } else {
-   header("HTTP/1.1 209 No id_user Param");
+   header("HTTP/1.1 209 No email Param");
    die();
 }
 
-$sql = "SELECT td.id as id, todolist, deadline, created_at, checklist, photo, t.tags as tags FROM todolists td INNER JOIN tags t on t.id=td.tags_id where users_id=? and is_deleted=?";
+$sql = "SELECT td.id as id, todolist, deadline, td.created_at as created_at, checklist, photo, t.tags as tags FROM todolists td INNER JOIN tags t on t.id=td.tags_id INNER JOIN users u on td.users_id=u.id where u.email=? and is_deleted='0' order by td.id";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param('ii', $id_user, $is_deleted);
+$stmt->bind_param('s', $email);
 $stmt->execute();
 $result = $stmt->get_result();
 date_default_timezone_set("Asia/Jakarta");

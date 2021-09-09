@@ -59,7 +59,9 @@
             $stmt->execute();
         
             if ($stmt->affected_rows > 0) {
+                $id = $conn->insert_id;
                 $user = array();
+                $user['id'] = $id;
                 $user['email'] = $email;
                 $user['name'] = $nama;
                 $user['role'] = $role;

@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
-$sql = "SELECT COUNT(*) as Total FROM users "; //select pake fetch_assoc kalo banyak pake while
+$sql = "SELECT COUNT(*) as Total FROM users ";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 
@@ -17,7 +17,7 @@ if ($result->num_rows > 0) {
     header("HTTP/1.1 210 Failed");
     echo json_encode([
         "status" => false,
-        "total" => "Failed",
+        "total" => "Failed.",
     ]);
 }
 $stmt->close();
