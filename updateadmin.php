@@ -2,37 +2,54 @@
 header("Access-Control-Allow-Origin: *");
 
 include "conn.php";
+include "bcrypt.php";
+if (isset($_POST["idadmin"])){
+    $id = $_POST["idadmin"];
+} else {
+    header("HTTP/1.1 209 No idadmin Param");
+    die();
+}
+if (isset($_POST["email"])){
+    $email = $_POST["email"];
+} else {
+    header("HTTP/1.1 209 No email Param");
+    die();
+}
+if (isset($_POST["nama"])){
+    $nama = $_POST["nama"];
+}else{
+    header("HTTP/1.1 209 No nama Param");
+    die();
+}
+$password = isset($_POST["password"]) ? $_POST["password"] : "";
 
-$role = isset($_POST['role']) ? $_POST['role'] : "";
+date_default_timezone_set("Asia/Jakarta");
+$updated_at = date('Y-m-d H:i:s');
+if ($password!=""){
+    $bcrypt = new Bcrypt(16);
+    $password = $bcrypt->hash($password);
+    $sql = "UPDATE users SET email = ?, nama = ?, password = ?, updated_at = ? WHERE id = ? and role='admin'";
 
-if ($role=='admin' || $role=='user'){
-    $sql = "SELECT id, email, nama, role, created_at FROM users where role=?";
+    // prepare and bind
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param('s', $role);
+    $stmt->bind_param("ssssi", $email, $nama, $password, $updated_at, $id);
     $stmt->execute();
 } else {
-    $sql = "SELECT id, email, nama, role, created_at FROM users";
+    $sql = "UPDATE users SET email = ?, nama = ?, updated_at = ? WHERE id = ? and role='admin'";
+
+    // prepare and bind
     $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssi", $email, $nama, $updated_at, $id);
     $stmt->execute();
 }
 
-$result = $stmt->get_result();
-if ($result->num_rows > 0) {
-    $data = array();
-    $i = 0;
-    while ($row = $result->fetch_assoc()) {
-        $data[$i]['id'] = stripslashes($row['id']);
-        $data[$i]['email'] = stripslashes($row['email']);
-        $data[$i]['nama'] = stripslashes($row['nama']);
-        $data[$i]['role'] = stripslashes($row['role']);
-        $data[$i]['created_at'] = stripslashes($row['created_at']);
-        $i++;
-    }
-    echo json_encode($data);
+if ($stmt->affected_rows > 0) {
+    $arr_hasil = array("status"=>true, "pesan"=>"Admin updated.");
 } else {
+    $arr_hasil = array("status"=>false, "pesan"=>"Failed to update admin.");
     header("HTTP/1.1 210 Failed");
-    echo "Unable to process your request, please try again";
 }
-$stmt->close();
+echo json_encode($arr_hasil);
 $conn->close();
+
 ?>
